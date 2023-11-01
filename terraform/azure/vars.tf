@@ -1,6 +1,6 @@
 variable "rg_name" {
     type    = string
-    default = "rg-staticsite-vm"
+    default = "rg-nader-cp3-v1"
 }
 
 variable "location" {

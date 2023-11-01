@@ -14,8 +14,8 @@ terraform {
     # }
   }
   backend "azurerm" {
-    resource_group_name  = "rg-staticsite-vm-tf"
-    storage_account_name = "staticsitevmkbtf001"
+    resource_group_name  = "rg-nader-cp3"
+    storage_account_name = "nadercp3"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
