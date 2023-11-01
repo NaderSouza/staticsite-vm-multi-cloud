@@ -53,8 +53,6 @@ jobs:
     - name: Step 09 - Terraform Security Scannning Run
       run: checkov --directory ./terraform
 
-
-
     - name: Step 10 - Terraform Apply
       run : terraform -chdir=./terraform/aws apply -auto-approve -input=false tfplan
 
@@ -98,8 +96,14 @@ jobs:
       run : terraform -chdir=./terraform/azure plan -input=false -out tfplan
       # run : terraform -chdir=./terraform/azure plan -input=false -destroy -out tfplan
 
-    - name: Step 08 - Terraform Apply
-      run : terraform -chdir=./terraform/azure apply -auto-approve -input=false tfplan
+    - name: Step 08 - Terraform Security Scannning Setup
+      run: pip3 install checkov
 
-    - name: Step 09 - Terraform Show
-      run : terraform -chdir=./terraform/azure show
+    - name: Step 09 - Terraform Security Scannning Run
+      run: checkov --directory ./terraform
+
+    - name: Step 10 - Terraform Apply
+      run : terraform -chdir=./terraform/aws apply -auto-approve -input=false tfplan
+
+    - name: Step 11 - Terraform Show
+      run : terraform -chdir=./terraform/aws show
