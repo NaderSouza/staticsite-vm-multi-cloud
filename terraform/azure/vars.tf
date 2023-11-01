@@ -1,6 +1,6 @@
 variable "rg_name" {
     type    = string
-    default = "rg-nader-cp3-v1"
+    default = "rg-staticsite-vm"
 }
 
 variable "location" {
@@ -20,5 +20,5 @@ variable "subnet_cidr" {
 
 variable "fqdn" {
     type    = string
-    default = "staticsite-vm-kb"
+    default = "staticsite-vm-nhs"
 }
