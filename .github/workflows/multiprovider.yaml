@@ -5,7 +5,7 @@ on:
     branches:
     - develop
     paths:
-    -  '**.tf'
+    -  '**.yaml'
 
 env:
   TERRAFORM_VERSION: 1.6.2
@@ -107,3 +107,5 @@ jobs:
 
     - name: Step 11 - Terraform Show
       run : terraform -chdir=./terraform/aws show
+
+      
