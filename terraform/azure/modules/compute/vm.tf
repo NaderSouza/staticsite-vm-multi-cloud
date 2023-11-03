@@ -99,7 +99,7 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile_linux_config {
-    disable_password_authentication = true  # Desativa a autenticação por senha para usuários Linux
+    disable_password_authentication = false  # Desativa a autenticação por senha para usuários Linux
   }
 
   provisioner "file" {
