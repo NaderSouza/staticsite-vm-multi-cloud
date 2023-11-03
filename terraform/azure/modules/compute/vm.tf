@@ -1,5 +1,5 @@
 resource "azurerm_ssh_public_key" "nadin-ssh" {
-  name                = "example"
+  name                = "staticsite-nadin-ssh"
   resource_group_name = var.rg_name
   location            = var.location
   public_key          = file("C:/Users/nader/.ssh/id_rsa.pub")
