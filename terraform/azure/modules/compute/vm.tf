@@ -2,8 +2,7 @@ resource "azurerm_ssh_public_key" "nadin-ssh" {
   name                = "staticsite-nadin-ssh"
   resource_group_name = var.rg_name
   location            = var.location
-  public_key = file("C:/Users/nader/Desktop/extra-point/staticsite-vm-multi-cloud/terraformid_rsa.pub")
-
+  public_key          = file("~/.ssh/id_rsa.pub")
 }
 
 resource "azurerm_public_ip" "public-ip" {
