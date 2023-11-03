@@ -20,5 +20,5 @@ variable "subnet_cidr" {
 
 variable "fqdn" {
     type    = string
-    default = "staticsite-vm-nhs"
+    default = "staticsite-vm-nhs-bonus"
 }
