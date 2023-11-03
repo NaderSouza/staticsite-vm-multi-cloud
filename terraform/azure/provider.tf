@@ -14,8 +14,8 @@ terraform {
     # }
   }
   backend "azurerm" {
-    resource_group_name  = "rg-nader-cp3"
-    storage_account_name = "nadercp3"
+    resource_group_name  = "rg-nadin-extra"
+    storage_account_name = "nadinextrapoint"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }

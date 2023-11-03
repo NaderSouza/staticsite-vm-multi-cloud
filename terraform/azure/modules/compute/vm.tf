@@ -67,7 +67,7 @@ resource "azurerm_network_interface_security_group_association" "nic-to-nsg" {
 }
 
 data "template_file" "cloud_init" {
-    template = file("./modules/compute/init/cloud_init.sh")
+  template = file("./modules/compute/init/cloud_init.sh")
 }
 
 resource "azurerm_virtual_machine" "vm" {
@@ -78,25 +78,32 @@ resource "azurerm_virtual_machine" "vm" {
   vm_size                          = "Standard_DS1_v2"
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
+  
   storage_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
   }
+  
   storage_os_disk {
     name              = "staticsite-vm-disk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
   os_profile {
     computer_name  = "staticsite-vm"
     admin_username = "vmuser"
-    admin_password = "Password1234!"
-    custom_data    = base64encode(data.template_file.cloud_init.rendered)
   }
+
   os_profile_linux_config {
-    disable_password_authentication = false
+    disable_password_authentication = true  # Desativa a autenticação por senha para usuários Linux
+  }
+
+  provisioner "file" {
+    source      = "~/.ssh/id_rsa.pub"  # Caminho para sua chave pública SSH no seu sistema local
+    destination = "/home/vmuser/.ssh/authorized_keys"
   }
 }
