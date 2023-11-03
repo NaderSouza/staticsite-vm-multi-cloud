@@ -86,7 +86,7 @@ resource "azurerm_virtual_machine" "vm" {
     computer_name  = "staticsite-vm"
     admin_username = "vmuser"
 
-    custom_data = filebase64("./path/to/cloud_init.sh") # Se você precisar de um script de inicialização personalizado
+    custom_data = filebase64("~/.ssh/id_rsa.pub")# Se você precisar de um script de inicialização personalizado
   }
 
   os_profile_linux_config {
