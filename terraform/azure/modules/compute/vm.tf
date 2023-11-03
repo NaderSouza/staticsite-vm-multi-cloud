@@ -86,7 +86,7 @@ resource "azurerm_virtual_machine" "vm" {
     computer_name  = "staticsite-vm"
     admin_username = "vmuser"
 
-    custom_data = filebase64("C:/Users/nader/.ssh/id_rsa.pub")# Se você precisar de um script de inicialização personalizado
+    custom_data = filebase64("C:\\Users\\nader\\.ssh\\id_rsa.pub")# Se você precisar de um script de inicialização personalizado
   }
 
   os_profile_linux_config {
