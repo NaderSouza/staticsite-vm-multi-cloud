@@ -2,7 +2,7 @@ resource "azurerm_ssh_public_key" "nadin-ssh" {
   name                = "example"
   resource_group_name = var.rg_name
   location            = var.location
-  public_key          = file("~/.ssh/id_rsa.pub")
+  public_key          = file("C:/Users/nader/.ssh/id_rsa.pub")
 }
 
 resource "azurerm_public_ip" "public-ip" {
