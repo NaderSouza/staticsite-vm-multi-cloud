@@ -1,3 +1,10 @@
+resource "azurerm_ssh_public_key" "nadin-ssh" {
+  name                = "example"
+  resource_group_name = var.rg_name
+  location            = var.location
+  public_key          = file("~/.ssh/id_rsa.pub")
+}
+
 resource "azurerm_public_ip" "public-ip" {
   name                = "staticsite-vm-public-ip"
   location            = var.location
@@ -61,20 +68,29 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-resource "azurerm_virtual_machine" "vm" {
-  name                  = "staticsite-vm"
-  resource_group_name   = var.rg_name
-  location              = var.location
-  vm_size               = "Standard_DS1_v2"
-  network_interface_ids = [azurerm_network_interface.nic.id]
+resource "azurerm_network_interface_security_group_association" "nic-to-nsg" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
+}
 
+data "template_file" "cloud_init" {
+    template = file("./modules/compute/init/cloud_init.sh")
+}
+
+resource "azurerm_virtual_machine" "vm" {
+  name                             = "staticsite-vm"
+  location                         = var.location
+  resource_group_name              = var.rg_name
+  network_interface_ids            = [azurerm_network_interface.nic.id]
+  vm_size                          = "Standard_DS1_v2"
+  delete_os_disk_on_termination    = true
+  delete_data_disks_on_termination = true
   storage_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
   }
-
   storage_os_disk {
     name              = "staticsite-vm-disk"
     caching           = "ReadWrite"
@@ -86,15 +102,14 @@ resource "azurerm_virtual_machine" "vm" {
     computer_name  = "staticsite-vm"
     admin_username = "vmuser"
 
-    custom_data = filebase64("C:\\Users\\nader\\.ssh\\id_rsa.pub")# Se você precisar de um script de inicialização personalizado
+    custom_data = base64encode(data.template_file.cloud_init.rendered)
   }
 
   os_profile_linux_config {
-    disable_password_authentication = true  # Desativa a autenticação por senha
-  }
-
-  provisioner "file" {
-    source      = "~/.ssh/id_rsa.pub"
-    destination = "/home/vmuser/.ssh/authorized_keys"
+    disable_password_authentication = true
+    ssh_keys {
+      key_data = azurerm_ssh_public_key.example.public_key
+      path     = "/home/vmuser/.ssh/authorized_keys"
+    }
   }
 }
