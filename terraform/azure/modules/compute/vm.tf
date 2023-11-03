@@ -61,31 +61,20 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "nic-to-nsg" {
-  network_interface_id      = azurerm_network_interface.nic.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-data "template_file" "cloud_init" {
-  template = file("./modules/compute/init/cloud_init.sh")
-}
-
 resource "azurerm_virtual_machine" "vm" {
-  name                             = "staticsite-vm"
-  location                         = var.location
-  resource_group_name              = var.rg_name
-  network_interface_ids            = [azurerm_network_interface.nic.id]
-  vm_size                          = "Standard_DS1_v2"
-  delete_os_disk_on_termination    = true
-  delete_data_disks_on_termination = true
-  
+  name                  = "staticsite-vm"
+  resource_group_name   = var.rg_name
+  location              = var.location
+  vm_size               = "Standard_DS1_v2"
+  network_interface_ids = [azurerm_network_interface.nic.id]
+
   storage_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
   }
-  
+
   storage_os_disk {
     name              = "staticsite-vm-disk"
     caching           = "ReadWrite"
@@ -96,14 +85,16 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile {
     computer_name  = "staticsite-vm"
     admin_username = "vmuser"
+
+    custom_data = filebase64("./path/to/cloud_init.sh") # Se você precisar de um script de inicialização personalizado
   }
 
   os_profile_linux_config {
-    disable_password_authentication = false  # Desativa a autenticação por senha para usuários Linux
+    disable_password_authentication = true  # Desativa a autenticação por senha
   }
 
   provisioner "file" {
-    source      = "~/.ssh/id_rsa.pub"  # Caminho para sua chave pública SSH no seu sistema local
+    source      = "~/.ssh/id_rsa.pub"
     destination = "/home/vmuser/.ssh/authorized_keys"
   }
 }
