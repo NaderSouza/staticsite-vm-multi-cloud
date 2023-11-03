@@ -1,6 +1,6 @@
 variable "rg_name" {
     type    = string
-    default = "rg-staticsite-vm"
+    default = "rg-staticsite-vm-bonus"
 }
 
 variable "location" {
