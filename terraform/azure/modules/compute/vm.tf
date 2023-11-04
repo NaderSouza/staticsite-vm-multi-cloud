@@ -100,8 +100,8 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-    path     =      "C:/Users/nader/.ssh/id_rsa.pub"
-    key_data = file("/opt/stackstorm/keys/Test.ppk")
+    path     =      "/home/vmuser/.ssh/authorized_keys"
+    key_data = file("C:/Users/nader/.ssh/id_rsa.pub")
     }
   }
 }
