@@ -10,6 +10,8 @@ resource "azurerm_network_security_group" "nsg" {
   name                = "staticsite-vm-nsg"
   location            = var.location
   resource_group_name = var.rg_name
+
+  
   
   security_rule {
     name                       = "SSH"
@@ -48,6 +50,8 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
+
+
 resource "azurerm_network_interface" "nic" {
   name                = "staticsite-vm-nic"
   location            = var.location
@@ -66,9 +70,18 @@ resource "azurerm_network_interface_security_group_association" "nic-to-nsg" {
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+# Create (and display) an SSH key
+resource "tls_private_key" "secureadmin_ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+  
+}
+
 data "template_file" "cloud_init" {
     template = file("./modules/compute/init/cloud_init.sh")
 }
+
+
 
 resource "azurerm_virtual_machine" "vm" {
   name                             = "staticsite-vm"
@@ -78,6 +91,9 @@ resource "azurerm_virtual_machine" "vm" {
   vm_size                          = "Standard_DS1_v2"
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
+
+  
+  
   storage_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
@@ -95,13 +111,19 @@ resource "azurerm_virtual_machine" "vm" {
     admin_username = "vmuser"
     # admin_password = "Password1234!"
     # custom_data    = base64encode(data.template_file.cloud_init.rendered)
+    
   }
+
+
   
   os_profile_linux_config {
     disable_password_authentication = true
+    
     ssh_keys {
-    path     =      "/home/vmuser/.ssh/authorized_keys"
+    path     =      "~/.ssh/id_rsa.pub"
     key_data = file("C:/Users/nader/.ssh/id_rsa.pub")
     }
   }
+
+  
 }
