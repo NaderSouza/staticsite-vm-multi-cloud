@@ -1,6 +1,6 @@
 variable "rg_name" {
     type    = string
-    default = "rg-staticsite-vm-bonus"
+    default = "rg-staticsite-vm-bonus-1"
 }
 
 variable "location" {
@@ -20,5 +20,5 @@ variable "subnet_cidr" {
 
 variable "fqdn" {
     type    = string
-    default = "staticsite-vm-nhs-bonus"
+    default = "staticsite-vm-nhs-bonus-1"
 }
